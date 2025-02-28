@@ -2,12 +2,12 @@
 {
 	internal class AcceleratedStochasticApproximation : AdaptiveProcedure
 	{
-		public readonly double c;
+		public readonly double initialStepSize;
 		public readonly double targetProbability;
-		public AcceleratedStochasticApproximation(double initialValue, double c, double targetProbability, EndCondition endCondition, int endConditionValue)
+		public AcceleratedStochasticApproximation(double initialValue, double initialStepSize, double targetProbability, EndCondition endCondition, int endConditionValue)
 		{
 			testedValues.Add(initialValue);
-			this.c = c;
+			this.initialStepSize = initialStepSize;
 			this.targetProbability = targetProbability;
 			this.endCondition = endCondition;
 			this.endConditionValue = endConditionValue;
@@ -36,11 +36,11 @@
 			double _shiftFactor;
 			if (responses.Count > 2)
 			{
-				_shiftFactor = c / (2 + GetInversionCount());
+				_shiftFactor = initialStepSize / (2 + GetInversionCount());
 			}
 			else
 			{
-				_shiftFactor = c / responses.Count;
+				_shiftFactor = initialStepSize / responses.Count;
 			}
 
 			double nextValue = testedValues[^1] - _shiftFactor * (_Zn - targetProbability);
