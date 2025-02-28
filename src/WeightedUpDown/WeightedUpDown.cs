@@ -20,22 +20,13 @@
 				return testedValues[^1];
 			}
 
-			double Zn;
-			switch (responses[^1])
+			double Zn = responses[^1] switch
 			{
-				case ResponseState.CorrectResp:
-					Zn = 1;
-					break;
-				case ResponseState.WrongResp:
-					Zn = 0;
-					break;
-				case ResponseState.DontKnowResp:
-					Zn = 0.5;
-					break;
-				default:
-					throw new ArgumentException();
-			}
-
+				ResponseState.CorrectResp => 1,
+				ResponseState.WrongResp => 0,
+				ResponseState.DontKnowResp => 0.5,
+				_ => throw new ArgumentException(),
+			};
 			double stepModifier = Zn - targetProbability;
 			// Rescale the step sizes so the smaller step size is equal to the provided step size
 			if (Math.Abs(1-targetProbability) < Math.Abs(0 - targetProbability))
