@@ -10,6 +10,8 @@
 			this.stepSize = stepSize;
 			this.endCondition = endCondition;
 			this.endConditionValue = endConditionValue;
+
+			AllowDontKnowResponses = false;
 		}
 
 		public override double NextValue()
@@ -19,22 +21,12 @@
 				return testedValues[^1];
 			}
 
-			double Zn;
-			switch (responses[^1])
+			double Zn = responses[^1] switch
 			{
-				case ResponseState.CorrectResp:
-					Zn = 1;
-					break;
-				case ResponseState.WrongResp:
-					Zn = 0;
-					break;
-				case ResponseState.DontKnowResp:
-					Zn = 0.5;
-					break;
-				default:
-					throw new ArgumentException();
-			}
-
+				ResponseState.CorrectResp => 1,
+				ResponseState.WrongResp => 0,
+				_ => throw new ArgumentException(),
+			};
 			double stepModifier = 2 * Zn - 1;
 			double nextValue = testedValues[^1] - stepSize * stepModifier;
 
